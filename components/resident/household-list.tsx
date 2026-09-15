@@ -2,7 +2,13 @@ import Link from "next/link";
 import { InitialsTile } from "@/components/ui/initials-tile";
 import type { HouseholdMember } from "@/lib/types";
 
-export function HouseholdList({ members }: { members: HouseholdMember[] }) {
+export function HouseholdList({
+  members,
+  isPrimary,
+}: {
+  members: HouseholdMember[];
+  isPrimary: boolean;
+}) {
   return (
     <div className="flex flex-col gap-3.5">
       {members.map((member) => (
@@ -22,7 +28,7 @@ export function HouseholdList({ members }: { members: HouseholdMember[] }) {
         href="/resident/household"
         className="rounded-field border border-primary/12 bg-ghost px-3 py-2.5 text-center text-[12.5px] font-semibold text-muted hover:text-text"
       >
-        + Add household member
+        {isPrimary ? "+ Add household member" : "View household"}
       </Link>
     </div>
   );

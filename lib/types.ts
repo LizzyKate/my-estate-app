@@ -35,10 +35,10 @@ export interface Pass {
   /** resident who created the pass */
   host: string;
   house: string;
+  /** id of the resident who created the pass — only they can see it in "My passes" */
+  residentId: number;
   plate: string;
   status: PassStatus;
-  /** belongs to the signed-in household */
-  mine: boolean;
   issuedAt: string;
   checkedInAt?: string;
   checkedOutAt?: string;
@@ -91,6 +91,8 @@ export interface HouseholdMember {
   name: string;
   relationship: string;
   residency: ResidencyType;
+  /** lets them sign in on their own — same estate link, their own OTP */
+  phone: string;
 }
 
 export type AnnouncementCategory = "UTILITY" | "SECURITY" | "EVENT" | "DUES";

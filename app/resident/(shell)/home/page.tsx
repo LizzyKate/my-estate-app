@@ -20,7 +20,9 @@ export default function ResidentHomePage() {
   const allWalkups = useStore((s) => s.walkups);
   const me = useSignedInResident();
 
-  const mine = allPasses.filter((p) => p.estateId === estateId && p.mine);
+  const mine = allPasses.filter(
+    (p) => p.estateId === estateId && p.residentId === residentId
+  );
   const household = allHousehold.filter(
     (h) => h.estateId === estateId && h.residentId === residentId
   );
@@ -30,7 +32,7 @@ export default function ResidentHomePage() {
   const waiting = mine.filter((p) => p.status === "waiting").length;
   const onsite = mine.filter((p) => p.status === "onsite").length;
   const openIssue = allMaintenance.find(
-    (m) => m.estateId === estateId && m.resident === me?.name && m.status !== "RESOLVED"
+    (m) => m.estateId === estateId && m.house === me?.house && m.status !== "RESOLVED"
   );
   const pendingWalkup = allWalkups.find(
     (w) => w.estateId === estateId && w.status === "pending" && w.house === me?.house
@@ -63,7 +65,7 @@ export default function ResidentHomePage() {
       <div className="w-full space-y-4 lg:w-[312px] lg:shrink-0">
         <Card className="p-4">
           <h3 className="mb-3.5 text-[13px] font-bold text-text">My household</h3>
-          <HouseholdList members={household} />
+          <HouseholdList members={household} isPrimary={me.isPrimary} />
         </Card>
 
         {openIssue && (

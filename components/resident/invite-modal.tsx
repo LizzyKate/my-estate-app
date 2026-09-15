@@ -35,7 +35,9 @@ export function InviteModal({
   const [cat, setCat] = useState<Category>("VISITOR");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [windowVal, setWindowVal] = useState<(typeof WINDOWS)[number]["value"] | "">("");
+  const [windowVal, setWindowVal] = useState<(typeof WINDOWS)[number]["value"] | "">(
+    WINDOWS[0].value
+  );
   const [plate, setPlate] = useState("");
   const [groupPass, setGroupPass] = useState(false);
   const [repeatWeekly, setRepeatWeekly] = useState(false);
@@ -46,7 +48,7 @@ export function InviteModal({
     setCat("VISITOR");
     setName("");
     setPhone("");
-    setWindowVal("");
+    setWindowVal(WINDOWS[0].value);
     setPlate("");
     setGroupPass(false);
     setRepeatWeekly(false);

@@ -48,7 +48,10 @@ function generateDeviceToken() {
 interface ResidentSession {
   status: "signed_out" | "otp_pending" | "signed_in";
   estateId: string | null;
+  /** the household this session belongs to — the primary resident's id, whether they or a member signed in */
   residentId: number | null;
+  /** set when a household member (not the primary resident) is the one signed in */
+  memberId: number | null;
   phone: string;
   otpAttempts: number;
   lockedUntil: number | null;
@@ -153,7 +156,9 @@ interface Store {
     name: string,
     relationship: string,
     residency: ResidencyType,
+    phone: string,
   ) => void;
+  removeHouseholdMember: (id: number) => void;
   reportIssue: (title: string, category: string) => void;
 
   // device actions — activation is what a physical gate device does once,
@@ -199,6 +204,7 @@ export const useStore = create<Store>()(
         status: "signed_out",
         estateId: null,
         residentId: null,
+        memberId: null,
         phone: "",
         otpAttempts: 0,
         lockedUntil: null,
@@ -249,23 +255,42 @@ export const useStore = create<Store>()(
       },
 
       requestOtp: (estateId, phone) => {
-        const match = get().residents.find(
-          (r) =>
-            r.estateId === estateId &&
-            normalizePhone(r.phone) === normalizePhone(phone),
+        const target = normalizePhone(phone);
+        const primaryMatch = get().residents.find(
+          (r) => r.estateId === estateId && normalizePhone(r.phone) === target,
         );
-        if (!match) return false;
-        set({
-          resident: {
-            status: "otp_pending",
-            estateId,
-            residentId: match.id,
-            phone,
-            otpAttempts: 0,
-            lockedUntil: null,
-          },
-        });
-        return true;
+        if (primaryMatch) {
+          set({
+            resident: {
+              status: "otp_pending",
+              estateId,
+              residentId: primaryMatch.id,
+              memberId: null,
+              phone,
+              otpAttempts: 0,
+              lockedUntil: null,
+            },
+          });
+          return true;
+        }
+        const memberMatch = get().household.find(
+          (h) => h.estateId === estateId && normalizePhone(h.phone) === target,
+        );
+        if (memberMatch) {
+          set({
+            resident: {
+              status: "otp_pending",
+              estateId,
+              residentId: memberMatch.residentId,
+              memberId: memberMatch.id,
+              phone,
+              otpAttempts: 0,
+              lockedUntil: null,
+            },
+          });
+          return true;
+        }
+        return false;
       },
 
       verifyOtp: (code) => {
@@ -302,6 +327,7 @@ export const useStore = create<Store>()(
             status: "signed_out",
             estateId: null,
             residentId: null,
+            memberId: null,
             phone: "",
             otpAttempts: 0,
             lockedUntil: null,
@@ -309,8 +335,11 @@ export const useStore = create<Store>()(
         }),
 
       createPass: (input) => {
-        const { resident, residents } = get();
-        const me = residents.find((r) => r.id === resident.residentId);
+        const { resident, residents, household } = get();
+        const primary = residents.find((r) => r.id === resident.residentId);
+        const member = resident.memberId
+          ? household.find((h) => h.id === resident.memberId)
+          : null;
         const code = groupCode(
           String(Math.floor(100000 + Math.random() * 900000)),
         );
@@ -321,11 +350,11 @@ export const useStore = create<Store>()(
           cat: input.cat,
           code,
           window: input.window,
-          host: me?.name ?? "",
-          house: me?.house ?? "",
+          host: member?.name ?? primary?.name ?? "",
+          house: primary?.house ?? "",
+          residentId: resident.residentId ?? 0,
           plate: input.plate,
           status: "waiting",
-          mine: true,
           issuedAt: formatClock(),
           groupPass: input.groupPass,
           repeatWeekly: input.repeatWeekly,
@@ -346,9 +375,10 @@ export const useStore = create<Store>()(
           ),
         }),
 
-      addHouseholdMember: (name, relationship, residency) => {
+      addHouseholdMember: (name, relationship, residency, phone) => {
         const { resident } = get();
-        if (!resident.residentId || !resident.estateId) return;
+        // only the primary resident can grow the household — members can't add or remove anyone
+        if (!resident.residentId || !resident.estateId || resident.memberId) return;
         set({
           household: [
             ...get().household,
@@ -359,13 +389,27 @@ export const useStore = create<Store>()(
               name,
               relationship,
               residency,
+              phone,
             },
           ],
         });
       },
 
+      removeHouseholdMember: (id) => {
+        const { resident } = get();
+        // only the primary resident can remove a household member
+        if (!resident.residentId || resident.memberId) return;
+        set({
+          household: get().household.filter(
+            (h) => !(h.id === id && h.residentId === resident.residentId),
+          ),
+        });
+      },
+
       reportIssue: (title, category) => {
         const { resident, residents } = get();
+        // household members can invite guests but can't file maintenance reports
+        if (resident.memberId) return;
         const me = residents.find((r) => r.id === resident.residentId);
         if (!me || !resident.estateId) return;
         set({

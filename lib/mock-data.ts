@@ -53,9 +53,9 @@ export const SEED_PASSES: Pass[] = [
     window: "14:00–18:00",
     host: "Ada Obi",
     house: "14B",
+    residentId: 1,
     plate: "ABJ 442 XA",
     status: "waiting",
-    mine: true,
     issuedAt: "09:12",
   },
   {
@@ -67,9 +67,9 @@ export const SEED_PASSES: Pass[] = [
     window: "ANY TIME",
     host: "Ada Obi",
     house: "14B",
+    residentId: 1,
     plate: "",
     status: "waiting",
-    mine: true,
     issuedAt: "10:40",
   },
   {
@@ -81,9 +81,9 @@ export const SEED_PASSES: Pass[] = [
     window: "SAT 09:00",
     host: "Ada Obi",
     house: "14B",
+    residentId: 1,
     plate: "",
     status: "waiting",
-    mine: true,
     issuedAt: "yesterday",
   },
   {
@@ -95,9 +95,9 @@ export const SEED_PASSES: Pass[] = [
     window: "10:00–14:00",
     host: "Tunde Ade",
     house: "07A",
+    residentId: 2,
     plate: "",
     status: "onsite",
-    mine: false,
     issuedAt: "08:02",
     checkedInAt: "08:31",
   },
@@ -114,6 +114,7 @@ export const SEED_HOUSEHOLD: HouseholdMember[] = [
     name: "Ngozi Obi",
     relationship: "Spouse",
     residency: "Permanent",
+    phone: "+234 802 555 0198",
   },
   {
     id: 2,
@@ -122,6 +123,7 @@ export const SEED_HOUSEHOLD: HouseholdMember[] = [
     name: "Emeka Obi",
     relationship: "Son",
     residency: "Permanent",
+    phone: "+234 802 555 0212",
   },
   {
     id: 3,
@@ -130,6 +132,7 @@ export const SEED_HOUSEHOLD: HouseholdMember[] = [
     name: "Blessing Eze",
     relationship: "House help",
     residency: "Temporary",
+    phone: "+234 802 555 0347",
   },
 ];
 

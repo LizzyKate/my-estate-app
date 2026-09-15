@@ -15,7 +15,7 @@ const NAV_ITEMS = [
   { href: "/resident/passes", label: "Visitors & passes" },
   { href: "/resident/household", label: "My household" },
   { href: "/resident/notices", label: "Estate notices" },
-  { href: "/resident/report", label: "Report an issue" },
+  { href: "/resident/report", label: "Report an issue", primaryOnly: true },
 ];
 
 export function ResidentSidebar() {
@@ -24,6 +24,7 @@ export function ResidentSidebar() {
   const signOut = useStore((s) => s.signOutResident);
   const me = useSignedInResident();
   const estate = useResidentEstate();
+  const navItems = NAV_ITEMS.filter((item) => !item.primaryOnly || me?.isPrimary);
 
   return (
     <aside className="flex w-[236px] shrink-0 flex-col gap-7 border-r border-primary/10 bg-chrome p-6">
@@ -35,7 +36,7 @@ export function ResidentSidebar() {
       </div>
 
       <nav className="flex flex-1 flex-col gap-1">
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const active = pathname === item.href;
           return (
             <Link

@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/field";
 import { Placeholder } from "@/components/ui/placeholder";
 import { useStore } from "@/lib/store";
+import { useSignedInResident } from "@/hooks/use-signed-in-resident";
 
 export default function ResidentReportPage() {
   const reportIssue = useStore((s) => s.reportIssue);
+  const me = useSignedInResident();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [details, setDetails] = useState("");
@@ -23,6 +25,20 @@ export default function ResidentReportPage() {
     setDetails("");
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 3000);
+  }
+
+  if (me && !me.isPrimary) {
+    return (
+      <div className="max-w-xl space-y-[18px]">
+        <div>
+          <h1 className="text-[24px] font-bold text-text">Report an issue</h1>
+          <p className="mt-1 text-[13.5px] text-muted">
+            Only the primary resident can file a maintenance report for this
+            household — ask them to submit it.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
