@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
 import { useSecurityNavItems } from "@/hooks/use-security-nav-items";
-import { OFFICER } from "@/lib/mock-data";
+import { useOnDutyOfficer } from "@/hooks/use-on-duty-officer";
 
 export function SecurityNavRail() {
   const pathname = usePathname();
   const router = useRouter();
   const items = useSecurityNavItems();
   const endShift = useStore((s) => s.endShift);
+  const officer = useOnDutyOfficer();
 
   return (
     <aside className="hidden w-[212px] shrink-0 flex-col gap-1 border-r border-primary/10 bg-chrome p-4 lg:flex">
@@ -56,7 +57,7 @@ export function SecurityNavRail() {
           End shift
         </Button>
         <p className="border-t border-dashed border-primary/16 pt-2.5 font-mono text-[9.5px] leading-relaxed text-faint">
-          EVERY ACTION IS STAMPED {OFFICER.id}
+          EVERY ACTION IS STAMPED {officer?.id}
         </p>
       </div>
     </aside>

@@ -1,25 +1,47 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Logo } from "@/components/logo";
 import { AuthShell } from "@/components/resident/auth-shell";
 import { Button } from "@/components/ui/button";
 import { MonoLabel } from "@/components/ui/mono-label";
 import { useStore } from "@/lib/store";
+import type { Estate } from "@/lib/types";
 
 export default function ResidentSignInPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResidentSignInForm />
+    </Suspense>
+  );
+}
+
+function ResidentSignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const estates = useStore((s) => s.estates);
   const requestOtp = useStore((s) => s.requestOtp);
+  const [estate, setEstate] = useState<Estate | null>(null);
   const [number, setNumber] = useState("");
   const [unregistered, setUnregistered] = useState(false);
+
+  // the estate admin's link is the only way in: /resident/sign-in?estate=greenview-gardens
+  useEffect(() => {
+    const slug = searchParams.get("estate");
+    if (!slug) return;
+    const match = estates.find((e) => e.slug === slug);
+    if (match) setEstate(match);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const digits = number.replace(/\D/g, "");
   const canSubmit = digits.length >= 10;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!canSubmit) return;
-    const ok = requestOtp(`+234${digits}`);
+    if (!canSubmit || !estate) return;
+    const ok = requestOtp(estate.id, `+234${digits}`);
     if (ok) {
       router.push("/resident/verify");
     } else {
@@ -27,10 +49,35 @@ export default function ResidentSignInPage() {
     }
   }
 
+  if (!estate) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-bg p-6">
+        <div className="w-full max-w-[440px] rounded-modal border border-primary/14 bg-sunken p-6 text-center sm:p-9">
+          <Logo className="mb-8 justify-center" />
+          <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-full bg-red/12 text-[20px] text-red">
+            ✕
+          </div>
+          <h1 className="text-[20px] font-bold text-text">
+            This link isn&rsquo;t valid
+          </h1>
+          <p className="mt-2 text-[13.5px] leading-relaxed text-muted">
+            You need the sign-in link your estate admin sent you. Ask them
+            to resend it from{" "}
+            <span className="font-mono text-[12.5px] text-text">
+              Residents → Resident sign-in link
+            </span>
+            .
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AuthShell>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div>
+          <MonoLabel className="mb-3 text-primary">{estate.name}</MonoLabel>
           <h1 className="text-[31px] leading-[1.2] font-bold tracking-[-0.02em] text-text">
             Sign in
           </h1>
@@ -65,9 +112,9 @@ export default function ResidentSignInPage() {
 
         {unregistered && (
           <div className="rounded-field border border-amber/22 bg-amber/7 p-3.5 text-[12.5px] leading-[1.6] text-amber-text">
-            We don&rsquo;t recognize this number. Only numbers registered by
-            your estate admin can sign in — contact estate management to be
-            added as a resident.
+            We don&rsquo;t recognize this number at {estate.name}. Only
+            numbers registered by your estate admin can sign in — contact
+            estate management to be added as a resident.
           </div>
         )}
       </form>

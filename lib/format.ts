@@ -42,3 +42,17 @@ export function maskPhone(phone: string): string {
   const clean = phone.replace(/\s/g, "");
   return `${clean.slice(0, 7)}••••${clean.slice(-2)}`;
 }
+
+/** "Oakwood Estate" -> "oakwood-estate" */
+export function slugify(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function daysSince(isoDate: string): number {
+  const ms = Date.now() - new Date(isoDate).getTime();
+  return Math.max(0, Math.floor(ms / (24 * 60 * 60 * 1000)));
+}

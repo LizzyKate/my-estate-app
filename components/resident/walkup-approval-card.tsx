@@ -26,7 +26,7 @@ export function WalkupApprovalCard({ walkup }: { walkup: Walkup }) {
             variant="success"
             size="lg"
             className="h-12 flex-1"
-            onClick={() => resolveWalkup("approved")}
+            onClick={() => resolveWalkup(walkup.id, "approved")}
           >
             Let them in
           </Button>
@@ -34,7 +34,7 @@ export function WalkupApprovalCard({ walkup }: { walkup: Walkup }) {
             variant="danger"
             size="lg"
             className="h-12 flex-1"
-            onClick={() => resolveWalkup("denied")}
+            onClick={() => resolveWalkup(walkup.id, "denied")}
           >
             Turn away
           </Button>

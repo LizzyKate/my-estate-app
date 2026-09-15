@@ -7,21 +7,36 @@ import { PassesTable } from "@/components/resident/passes-table";
 import { HouseholdList } from "@/components/resident/household-list";
 import { InviteFlow } from "@/components/resident/invite-flow";
 import { useStore } from "@/lib/store";
-import { SIGNED_IN_RESIDENT } from "@/lib/mock-data";
+import { useSignedInResident } from "@/hooks/use-signed-in-resident";
 import { formatClock, formatDay, getGreeting } from "@/lib/format";
 
 export default function ResidentHomePage() {
-  const passes = useStore((s) => s.passes);
-  const household = useStore((s) => s.household);
-  const maintenance = useStore((s) => s.maintenance);
-  const announcements = useStore((s) => s.announcements);
-  const walkup = useStore((s) => s.walkup);
+  const estateId = useStore((s) => s.resident.estateId);
+  const residentId = useStore((s) => s.resident.residentId);
+  const allPasses = useStore((s) => s.passes);
+  const allHousehold = useStore((s) => s.household);
+  const allMaintenance = useStore((s) => s.maintenance);
+  const allAnnouncements = useStore((s) => s.announcements);
+  const allWalkups = useStore((s) => s.walkups);
+  const me = useSignedInResident();
 
-  const mine = passes.filter((p) => p.mine);
+  const mine = allPasses.filter((p) => p.estateId === estateId && p.mine);
+  const household = allHousehold.filter(
+    (h) => h.estateId === estateId && h.residentId === residentId
+  );
+  const announcements = allAnnouncements.filter(
+    (a) => a.estateId === estateId && a.status === "published"
+  );
   const waiting = mine.filter((p) => p.status === "waiting").length;
   const onsite = mine.filter((p) => p.status === "onsite").length;
-  const openIssue = maintenance.find((m) => m.resident === SIGNED_IN_RESIDENT.name && m.status !== "RESOLVED");
-  const pendingWalkup = walkup && walkup.status === "pending" && walkup.house === SIGNED_IN_RESIDENT.house ? walkup : null;
+  const openIssue = allMaintenance.find(
+    (m) => m.estateId === estateId && m.resident === me?.name && m.status !== "RESOLVED"
+  );
+  const pendingWalkup = allWalkups.find(
+    (w) => w.estateId === estateId && w.status === "pending" && w.house === me?.house
+  );
+
+  if (!me) return null;
 
   return (
     <div className="flex flex-col gap-[18px] lg:flex-row lg:items-start">
@@ -29,7 +44,7 @@ export default function ResidentHomePage() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-[27px] leading-[1.2] font-bold text-text">
-              {getGreeting()}, {SIGNED_IN_RESIDENT.name.split(" ")[0]}
+              {getGreeting()}, {me.name.split(" ")[0]}
             </h1>
             <p className="mt-1 font-mono text-[12px] text-faint">
               {formatDay()} · {formatClock()} · {waiting} waiting · {onsite} on site

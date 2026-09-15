@@ -10,13 +10,18 @@ export interface SecurityNavItem {
 
 /** shared nav-item + live-count computation for the desktop rail and mobile tab bar */
 export function useSecurityNavItems(): SecurityNavItem[] {
-  const passes = useStore((s) => s.passes);
-  const walkup = useStore((s) => s.walkup);
+  const estateId = useStore((s) => s.deviceAuth.estateId);
+  const allPasses = useStore((s) => s.passes);
+  const allWalkups = useStore((s) => s.walkups);
+
+  const passes = allPasses.filter((p) => p.estateId === estateId);
+  const walkupPending = allWalkups.some(
+    (w) => w.estateId === estateId && w.status === "pending"
+  );
 
   const waiting = passes.filter((p) => p.status === "waiting").length;
   const onsite = passes.filter((p) => p.status === "onsite").length;
   const logged = passes.filter((p) => p.status === "out").length;
-  const walkupPending = walkup?.status === "pending";
 
   return [
     { href: "/security/gate", label: "Gate check", shortLabel: "Gate", count: null },

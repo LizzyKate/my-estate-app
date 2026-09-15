@@ -1,8 +1,14 @@
+"use client";
+
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminMobileHeader } from "@/components/admin/mobile-header";
 import { AdminMobileNav } from "@/components/admin/mobile-nav";
+import { useAdminGuard } from "@/hooks/use-admin-guard";
 
-export default function AdminLayout({ children }: LayoutProps<"/admin">) {
+export function AdminShell({ children }: { children: React.ReactNode }) {
+  const authed = useAdminGuard();
+  if (!authed) return null;
+
   return (
     <div className="flex min-h-screen flex-col lg:flex-row">
       <AdminMobileHeader />

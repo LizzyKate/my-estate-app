@@ -4,7 +4,7 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { formatClock } from "@/lib/format";
-import { OFFICER } from "@/lib/mock-data";
+import { useOnDutyOfficer } from "@/hooks/use-on-duty-officer";
 
 export default function ResultDeniedPage({
   searchParams,
@@ -13,6 +13,7 @@ export default function ResultDeniedPage({
 }) {
   const { code = "" } = use(searchParams);
   const router = useRouter();
+  const officer = useOnDutyOfficer();
 
   const spaced = code.split("").join(" ");
 
@@ -26,7 +27,7 @@ export default function ResultDeniedPage({
           No pass for {spaced}
         </h1>
         <p className="mt-2 font-mono text-[10.5px] text-faint">
-          ATTEMPT LOGGED {formatClock()} · {OFFICER.gate.toUpperCase()} · {OFFICER.id}
+          ATTEMPT LOGGED {formatClock()} · {officer?.gate.toUpperCase()} · {officer?.id}
         </p>
 
         <div className="mt-5 rounded-field border border-red/24 bg-red/8 p-3.5 text-left text-[12.5px] leading-relaxed text-red">

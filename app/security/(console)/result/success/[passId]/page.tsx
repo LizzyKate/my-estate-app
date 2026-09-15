@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { MonoLabel } from "@/components/ui/mono-label";
 import { useCountdown } from "@/hooks/use-countdown";
+import { useOnDutyOfficer } from "@/hooks/use-on-duty-officer";
 import { useStore } from "@/lib/store";
-import { OFFICER } from "@/lib/mock-data";
 
 export default function ResultSuccessPage({
   params,
@@ -18,7 +18,10 @@ export default function ResultSuccessPage({
   const { passId } = use(params);
   const { view } = use(searchParams);
   const router = useRouter();
-  const pass = useStore((s) => s.passes.find((p) => String(p.id) === passId));
+  const estateId = useStore((s) => s.deviceAuth.estateId);
+  const allPasses = useStore((s) => s.passes);
+  const pass = allPasses.find((p) => String(p.id) === passId && p.estateId === estateId);
+  const officer = useOnDutyOfficer();
 
   const { label } = useCountdown(8, () => {
     if (!view) router.push("/security/gate");
@@ -42,7 +45,7 @@ export default function ResultSuccessPage({
           {pass.name.split(" ")[0]} is in.
         </h1>
         <p className="mt-2 text-[13.5px] text-muted">
-          Checked in by {OFFICER.id} {OFFICER.name}. {pass.host} has been
+          Checked in by {officer?.id} {officer?.name}. {pass.host} has been
           notified.
         </p>
 

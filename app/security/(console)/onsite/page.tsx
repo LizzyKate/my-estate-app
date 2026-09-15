@@ -7,8 +7,9 @@ import { useStore } from "@/lib/store";
 
 export default function OnSiteNowPage() {
   const router = useRouter();
+  const estateId = useStore((s) => s.deviceAuth.estateId);
   const allPasses = useStore((s) => s.passes);
-  const passes = allPasses.filter((p) => p.status === "onsite");
+  const passes = allPasses.filter((p) => p.estateId === estateId && p.status === "onsite");
 
   return (
     <div className="space-y-5">

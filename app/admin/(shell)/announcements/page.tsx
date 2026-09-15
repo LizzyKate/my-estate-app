@@ -7,15 +7,24 @@ import { Field, Input, Textarea } from "@/components/ui/field";
 import { MaintenanceQueue } from "@/components/admin/maintenance-queue";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
-import { ADMIN_STATS } from "@/lib/mock-data";
+import { getAdminStats } from "@/lib/mock-data";
 import type { AnnouncementCategory } from "@/lib/types";
 
 const CATEGORIES: AnnouncementCategory[] = ["UTILITY", "SECURITY", "EVENT", "DUES"];
 
 export default function AdminAnnouncementsPage() {
-  const announcements = useStore((s) => s.announcements);
-  const maintenance = useStore((s) => s.maintenance);
+  const estateId = useStore((s) => s.admin.estateId);
+  const allAnnouncements = useStore((s) => s.announcements);
+  const allMaintenance = useStore((s) => s.maintenance);
+  const allResidents = useStore((s) => s.residents);
+  const allPasses = useStore((s) => s.passes);
   const publishAnnouncement = useStore((s) => s.publishAnnouncement);
+
+  const announcements = allAnnouncements.filter((a) => a.estateId === estateId);
+  const maintenance = allMaintenance.filter((m) => m.estateId === estateId);
+  const residents = allResidents.filter((r) => r.estateId === estateId);
+  const passes = allPasses.filter((p) => p.estateId === estateId);
+  const stats = getAdminStats(estateId ?? "", residents, passes);
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -70,7 +79,7 @@ export default function AdminAnnouncementsPage() {
                   setBody("");
                 }}
               >
-                Publish to {ADMIN_STATS.householdsActive} households
+                Publish to {stats.householdsActive} households
               </Button>
               <Button
                 variant="ghost"

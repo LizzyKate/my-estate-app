@@ -10,19 +10,22 @@ import { MonoLabel } from "@/components/ui/mono-label";
 import { Chip } from "@/components/ui/chip";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
-import { SIGNED_IN_RESIDENT } from "@/lib/mock-data";
 import type { Walkup, WalkupStatus } from "@/lib/types";
 
 export default function WalkupPage() {
   const router = useRouter();
-  const walkup = useStore((s) => s.walkup);
-  const walkupHistory = useStore((s) => s.walkupHistory);
+  const estateId = useStore((s) => s.deviceAuth.estateId);
+  const allWalkups = useStore((s) => s.walkups);
   const logWalkup = useStore((s) => s.logWalkup);
   const dismissWalkup = useStore((s) => s.dismissWalkup);
 
+  const estateWalkups = allWalkups.filter((w) => w.estateId === estateId);
+  const current = estateWalkups.find((w) => !w.dismissed) ?? null;
+  const history = estateWalkups.filter((w) => w.dismissed);
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [house, setHouse] = useState(SIGNED_IN_RESIDENT.house);
+  const [house, setHouse] = useState("");
   const [reason, setReason] = useState("");
 
   const canSubmit = name.trim() && phone.trim() && house.trim() && reason.trim();
@@ -73,7 +76,7 @@ export default function WalkupPage() {
               className="flex-[2]"
               disabled={!canSubmit}
             >
-              Ping household {house}
+              Ping household {house || ""}
             </Button>
           </div>
         </form>
@@ -81,22 +84,22 @@ export default function WalkupPage() {
 
       <div className="space-y-4 rounded-card bg-chrome p-5">
         <MonoLabel>
-          Awaiting approval · {walkup?.status === "pending" ? 1 : 0}
+          Awaiting approval · {current?.status === "pending" ? 1 : 0}
         </MonoLabel>
 
-        {walkup ? (
-          <PendingWalkupCard walkup={walkup} onDismiss={dismissWalkup} />
+        {current ? (
+          <PendingWalkupCard walkup={current} onDismiss={() => dismissWalkup(current.id)} />
         ) : (
           <div className="rounded-card border border-dashed border-primary/16 p-6 text-center text-[12.5px] text-faint">
             No walk-up in progress.
           </div>
         )}
 
-        {walkupHistory.length > 0 && (
+        {history.length > 0 && (
           <div>
             <MonoLabel className="mb-2 block">Earlier this shift</MonoLabel>
             <div className="space-y-2">
-              {walkupHistory.map((w) => (
+              {history.map((w) => (
                 <div
                   key={w.id}
                   className="flex items-center justify-between rounded-field border border-primary/10 bg-surface px-3 py-2.5"

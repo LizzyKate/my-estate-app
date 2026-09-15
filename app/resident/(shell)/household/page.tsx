@@ -10,7 +10,12 @@ import { useStore } from "@/lib/store";
 import type { ResidencyType } from "@/lib/types";
 
 export default function ResidentHouseholdPage() {
-  const household = useStore((s) => s.household);
+  const estateId = useStore((s) => s.resident.estateId);
+  const residentId = useStore((s) => s.resident.residentId);
+  const allHousehold = useStore((s) => s.household);
+  const household = allHousehold.filter(
+    (h) => h.estateId === estateId && h.residentId === residentId
+  );
   const addHouseholdMember = useStore((s) => s.addHouseholdMember);
 
   const [name, setName] = useState("");

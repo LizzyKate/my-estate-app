@@ -11,10 +11,15 @@ import { useStore } from "@/lib/store";
 export default function GateCheckPage() {
   const router = useRouter();
   const submitCode = useStore((s) => s.submitCode);
-  const passes = useStore((s) => s.passes);
-  const walkup = useStore((s) => s.walkup);
+  const estateId = useStore((s) => s.deviceAuth.estateId);
+  const allPasses = useStore((s) => s.passes);
+  const allWalkups = useStore((s) => s.walkups);
   const [code, setCode] = useState("");
 
+  const passes = allPasses.filter((p) => p.estateId === estateId);
+  const walkupPending = allWalkups.some(
+    (w) => w.estateId === estateId && w.status === "pending"
+  );
   const waiting = passes.filter((p) => p.status === "waiting").length;
   const onsite = passes.filter((p) => p.status === "onsite").length;
 
@@ -67,8 +72,8 @@ export default function GateCheckPage() {
         <StatTile label="On site now" value={onsite} accent="green" />
         <StatTile
           label="Awaiting resident"
-          value={walkup?.status === "pending" ? 1 : 0}
-          accent={walkup?.status === "pending" ? "amber" : undefined}
+          value={walkupPending ? 1 : 0}
+          accent={walkupPending ? "amber" : undefined}
         />
       </div>
     </div>

@@ -7,8 +7,9 @@ import { useStore } from "@/lib/store";
 
 export default function TodaysLogPage() {
   const router = useRouter();
+  const estateId = useStore((s) => s.deviceAuth.estateId);
   const allPasses = useStore((s) => s.passes);
-  const passes = allPasses.filter((p) => p.status === "out");
+  const passes = allPasses.filter((p) => p.estateId === estateId && p.status === "out");
 
   return (
     <div className="space-y-5">

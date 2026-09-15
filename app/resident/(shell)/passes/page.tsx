@@ -5,8 +5,9 @@ import { InviteFlow } from "@/components/resident/invite-flow";
 import { useStore } from "@/lib/store";
 
 export default function ResidentPassesPage() {
+  const estateId = useStore((s) => s.resident.estateId);
   const allPasses = useStore((s) => s.passes);
-  const passes = allPasses.filter((p) => p.mine);
+  const passes = allPasses.filter((p) => p.estateId === estateId && p.mine);
 
   return (
     <div className="space-y-[18px]">

@@ -15,7 +15,9 @@ export default function VerifyPage({
 }) {
   const { passId } = use(params);
   const router = useRouter();
-  const pass = useStore((s) => s.passes.find((p) => String(p.id) === passId));
+  const estateId = useStore((s) => s.deviceAuth.estateId);
+  const allPasses = useStore((s) => s.passes);
+  const pass = allPasses.find((p) => String(p.id) === passId && p.estateId === estateId);
   const checkInPass = useStore((s) => s.checkInPass);
 
   useEffect(() => {

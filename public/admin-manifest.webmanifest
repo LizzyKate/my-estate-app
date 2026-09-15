@@ -1,0 +1,24 @@
+{
+  "name": "MyEstate — Estate Admin",
+  "short_name": "MyEstate Admin",
+  "description": "Register residents, publish notices, watch live gate numbers.",
+  "start_url": "/admin",
+  "scope": "/admin/",
+  "display": "standalone",
+  "background_color": "#080b12",
+  "theme_color": "#0b1120",
+  "icons": [
+    {
+      "src": "/admin/icon-192",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/admin/icon-512",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

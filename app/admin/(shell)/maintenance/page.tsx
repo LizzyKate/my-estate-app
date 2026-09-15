@@ -4,7 +4,9 @@ import { MaintenanceQueue } from "@/components/admin/maintenance-queue";
 import { useStore } from "@/lib/store";
 
 export default function AdminMaintenancePage() {
-  const maintenance = useStore((s) => s.maintenance);
+  const estateId = useStore((s) => s.admin.estateId);
+  const allMaintenance = useStore((s) => s.maintenance);
+  const maintenance = allMaintenance.filter((m) => m.estateId === estateId);
 
   return (
     <div className="max-w-2xl space-y-6">

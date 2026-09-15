@@ -16,9 +16,14 @@ const STATUS_CHIP: Record<PassStatus, { tone: "amber" | "green" | "neutral"; lab
 };
 
 export default function AdminGatePage() {
-  const passes = useStore((s) => s.passes);
-  const walkup = useStore((s) => s.walkup);
+  const estateId = useStore((s) => s.admin.estateId);
+  const allPasses = useStore((s) => s.passes);
+  const allWalkups = useStore((s) => s.walkups);
 
+  const passes = allPasses.filter((p) => p.estateId === estateId);
+  const walkupPending = allWalkups.some(
+    (w) => w.estateId === estateId && w.status === "pending"
+  );
   const waiting = passes.filter((p) => p.status === "waiting").length;
   const onsite = passes.filter((p) => p.status === "onsite").length;
 
@@ -37,8 +42,8 @@ export default function AdminGatePage() {
         <StatTile label="Still waiting" value={waiting} accent="amber" />
         <StatTile
           label="Walk-ups pending"
-          value={walkup?.status === "pending" ? 1 : 0}
-          accent={walkup?.status === "pending" ? "amber" : undefined}
+          value={walkupPending ? 1 : 0}
+          accent={walkupPending ? "amber" : undefined}
         />
       </div>
 

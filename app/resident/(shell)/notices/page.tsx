@@ -4,7 +4,9 @@ import { Chip } from "@/components/ui/chip";
 import { useStore } from "@/lib/store";
 
 export default function ResidentNoticesPage() {
-  const announcements = useStore((s) => s.announcements);
+  const estateId = useStore((s) => s.resident.estateId);
+  const allAnnouncements = useStore((s) => s.announcements);
+  const announcements = allAnnouncements.filter((a) => a.estateId === estateId);
 
   return (
     <div className="max-w-2xl space-y-[18px]">

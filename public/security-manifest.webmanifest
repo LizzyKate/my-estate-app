@@ -1,0 +1,24 @@
+{
+  "name": "MyEstate — Gate Console",
+  "short_name": "MyEstate Gate",
+  "description": "Start a shift, check codes at the gate, log walk-ups.",
+  "start_url": "/security",
+  "scope": "/security/",
+  "display": "standalone",
+  "background_color": "#080b12",
+  "theme_color": "#0b1120",
+  "icons": [
+    {
+      "src": "/security/icon-192",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/security/icon-512",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

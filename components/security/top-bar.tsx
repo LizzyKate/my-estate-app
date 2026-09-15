@@ -7,14 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { InitialsTile } from "@/components/ui/initials-tile";
 import { formatClock } from "@/lib/format";
-import { OFFICER } from "@/lib/mock-data";
 import { useStore } from "@/lib/store";
+import { useOnDutyOfficer } from "@/hooks/use-on-duty-officer";
 
 export function SecurityTopBar() {
   const router = useRouter();
   const [clock, setClock] = useState(formatClock());
   const startedAt = useStore((s) => s.officer.startedAt);
   const endShift = useStore((s) => s.endShift);
+  const officer = useOnDutyOfficer();
 
   useEffect(() => {
     const id = setInterval(() => setClock(formatClock()), 1000);
@@ -26,7 +27,7 @@ export function SecurityTopBar() {
       <Logo className="shrink-0" />
       <span className="hidden h-6 w-px shrink-0 bg-primary/12 md:block" />
       <span className="hidden shrink-0 truncate font-mono text-[11.5px] tracking-[0.08em] text-faint uppercase md:block">
-        Gate console · {OFFICER.gate}
+        Gate console · {officer?.gate}
       </span>
       <Chip tone="green" dot className="hidden shrink-0 sm:inline-flex">
         Online
@@ -36,11 +37,11 @@ export function SecurityTopBar() {
           {clock}
         </span>
         <div className="flex items-center gap-2">
-          <InitialsTile name={OFFICER.name} size={28} />
+          <InitialsTile name={officer?.name ?? "?"} size={28} />
           <div className="hidden sm:block">
-            <p className="text-[12px] font-semibold text-text">{OFFICER.name}</p>
+            <p className="text-[12px] font-semibold text-text">{officer?.name}</p>
             <p className="font-mono text-[10px] text-faint">
-              {OFFICER.id} · since {startedAt}
+              {officer?.id} · since {startedAt}
             </p>
           </div>
         </div>
