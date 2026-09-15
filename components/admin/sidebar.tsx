@@ -7,12 +7,12 @@ import { MonoLabel } from "@/components/ui/mono-label";
 import { cn } from "@/lib/utils";
 import { ESTATE_NAME, PILOT_DAY, PILOT_TOTAL_DAYS } from "@/lib/mock-data";
 
-const NAV_ITEMS = [
-  { href: "/admin/residents", label: "Residents" },
-  { href: "/admin/gate", label: "Visitor log" },
-  { href: "/admin/announcements", label: "Announcements" },
-  { href: "/admin/maintenance", label: "Maintenance" },
-  { href: "/admin/officers", label: "Security officers" },
+export const ADMIN_NAV_ITEMS = [
+  { href: "/admin/residents", label: "Residents", shortLabel: "Residents" },
+  { href: "/admin/gate", label: "Visitor log", shortLabel: "Log" },
+  { href: "/admin/announcements", label: "Announcements", shortLabel: "Notices" },
+  { href: "/admin/maintenance", label: "Maintenance", shortLabel: "Maint." },
+  { href: "/admin/officers", label: "Security officers", shortLabel: "Officers" },
 ];
 
 export function AdminSidebar() {
@@ -20,7 +20,7 @@ export function AdminSidebar() {
   const pct = Math.round((PILOT_DAY / PILOT_TOTAL_DAYS) * 100);
 
   return (
-    <aside className="flex w-[228px] shrink-0 flex-col gap-7 border-r border-primary/10 bg-chrome p-6">
+    <aside className="hidden w-[228px] shrink-0 flex-col gap-7 border-r border-primary/10 bg-chrome p-6 lg:flex">
       <Logo />
 
       <div className="rounded-card border border-primary/10 bg-surface p-3.5">
@@ -29,7 +29,7 @@ export function AdminSidebar() {
       </div>
 
       <nav className="flex flex-1 flex-col gap-1">
-        {NAV_ITEMS.map((item) => {
+        {ADMIN_NAV_ITEMS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link

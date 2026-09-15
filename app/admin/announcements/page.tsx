@@ -24,7 +24,7 @@ export default function AdminAnnouncementsPage() {
   const canSubmit = title.trim() && body.trim();
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[436px_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[436px_1fr]">
       <div className="space-y-5">
         <Card className="p-5">
           <h1 className="mb-4 text-[17px] font-bold text-text">
@@ -60,7 +60,7 @@ export default function AdminAnnouncementsPage() {
                 </button>
               ))}
             </div>
-            <div className="flex gap-2.5">
+            <div className="flex flex-col gap-2.5 sm:flex-row">
               <Button
                 disabled={!canSubmit}
                 className="flex-1"

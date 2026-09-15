@@ -42,12 +42,13 @@ export default function GateCheckPage() {
       <CodeReadout value={code} />
 
       <NumericKeypad
+        className="w-full max-w-[340px]"
         onDigit={(d) => setCode((c) => (c.length < 6 ? c + d : c))}
         onBackspace={() => setCode((c) => c.slice(0, -1))}
         onEnter={handleSubmit}
       />
 
-      <div className="grid w-full gap-3">
+      <div className="grid w-full grid-cols-1 gap-3">
         <Button size="xl" className="w-full" disabled={code.length !== 6} onClick={handleSubmit}>
           Check this code
         </Button>

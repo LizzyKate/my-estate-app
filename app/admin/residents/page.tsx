@@ -53,7 +53,7 @@ export default function AdminResidentsPage() {
         <StatTile label="Avg gate time" value={`${ADMIN_STATS.avgGateTimeSeconds}s`} />
       </div>
 
-      <TableShell>
+      <TableShell minWidth={720}>
         <TableHeaderRow columns={COLUMNS}>
           <span>Resident</span>
           <span>House</span>

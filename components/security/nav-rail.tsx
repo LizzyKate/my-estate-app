@@ -5,35 +5,17 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/store";
+import { useSecurityNavItems } from "@/hooks/use-security-nav-items";
 import { OFFICER } from "@/lib/mock-data";
 
 export function SecurityNavRail() {
   const pathname = usePathname();
   const router = useRouter();
-  const passes = useStore((s) => s.passes);
-  const walkup = useStore((s) => s.walkup);
+  const items = useSecurityNavItems();
   const endShift = useStore((s) => s.endShift);
 
-  const waiting = passes.filter((p) => p.status === "waiting").length;
-  const onsite = passes.filter((p) => p.status === "onsite").length;
-  const logged = passes.filter((p) => p.status === "out").length;
-  const walkupPending = walkup?.status === "pending";
-
-  const items = [
-    { href: "/security/gate", label: "Gate check", count: null },
-    { href: "/security/expected", label: "Expected today", count: waiting },
-    { href: "/security/onsite", label: "On site now", count: onsite },
-    {
-      href: "/security/walkup",
-      label: "Walk-ups",
-      count: walkupPending ? 1 : 0,
-      amber: walkupPending,
-    },
-    { href: "/security/log", label: "Today's log", count: logged },
-  ];
-
   return (
-    <aside className="flex w-[212px] shrink-0 flex-col gap-1 border-r border-primary/10 bg-chrome p-4">
+    <aside className="hidden w-[212px] shrink-0 flex-col gap-1 border-r border-primary/10 bg-chrome p-4 lg:flex">
       {items.map((item) => {
         const active = pathname === item.href;
         return (

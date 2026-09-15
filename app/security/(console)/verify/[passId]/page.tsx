@@ -49,7 +49,7 @@ export default function VerifyPage({
         </button>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-[260px_1fr]">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-[260px_1fr]">
         <div className="flex flex-col gap-3">
           <Placeholder caption="Visitor photo" className="h-[280px] w-full" />
           <p className="font-mono text-[10.5px] leading-relaxed text-faint">

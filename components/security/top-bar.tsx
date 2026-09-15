@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Logo } from "@/components/logo";
+import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { InitialsTile } from "@/components/ui/initials-tile";
 import { formatClock } from "@/lib/format";
@@ -9,8 +11,10 @@ import { OFFICER } from "@/lib/mock-data";
 import { useStore } from "@/lib/store";
 
 export function SecurityTopBar() {
+  const router = useRouter();
   const [clock, setClock] = useState(formatClock());
   const startedAt = useStore((s) => s.officer.startedAt);
+  const endShift = useStore((s) => s.endShift);
 
   useEffect(() => {
     const id = setInterval(() => setClock(formatClock()), 1000);
@@ -18,17 +22,17 @@ export function SecurityTopBar() {
   }, []);
 
   return (
-    <header className="flex h-[62px] shrink-0 items-center gap-4 border-b border-primary/10 bg-chrome px-5">
-      <Logo />
-      <span className="h-6 w-px bg-primary/12" />
-      <span className="font-mono text-[11.5px] tracking-[0.08em] text-faint uppercase">
+    <header className="flex h-[62px] shrink-0 items-center gap-3 overflow-hidden border-b border-primary/10 bg-chrome px-3 sm:gap-4 sm:px-5">
+      <Logo className="shrink-0" />
+      <span className="hidden h-6 w-px shrink-0 bg-primary/12 md:block" />
+      <span className="hidden shrink-0 truncate font-mono text-[11.5px] tracking-[0.08em] text-faint uppercase md:block">
         Gate console · {OFFICER.gate}
       </span>
-      <Chip tone="green" dot>
+      <Chip tone="green" dot className="hidden shrink-0 sm:inline-flex">
         Online
       </Chip>
-      <div className="ml-auto flex items-center gap-4">
-        <span className="tabular font-mono text-[15px] font-bold text-text">
+      <div className="ml-auto flex shrink-0 items-center gap-3 sm:gap-4">
+        <span className="tabular font-mono text-[13px] font-bold text-text sm:text-[15px]">
           {clock}
         </span>
         <div className="flex items-center gap-2">
@@ -40,6 +44,17 @@ export function SecurityTopBar() {
             </p>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="lg:hidden"
+          onClick={() => {
+            endShift();
+            router.replace("/security/sign-in");
+          }}
+        >
+          End
+        </Button>
       </div>
     </header>
   );

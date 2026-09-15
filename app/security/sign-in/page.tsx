@@ -28,7 +28,7 @@ export default function SecuritySignInPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-bg p-6">
-      <div className="w-full max-w-[520px] rounded-modal border border-primary/14 bg-sunken p-9">
+      <div className="w-full max-w-[520px] rounded-modal border border-primary/14 bg-sunken p-6 sm:p-9">
         <Logo className="mb-8" />
 
         <MonoLabel>Gate & officer</MonoLabel>
@@ -48,7 +48,7 @@ export default function SecuritySignInPage() {
         )}
 
         <NumericKeypad
-          className="mx-auto mb-7 w-fit"
+          className="mx-auto mb-7 w-full max-w-[340px]"
           onDigit={(d) => {
             setError(false);
             setPin((p) => (p.length < 4 ? p + d : p));

@@ -25,7 +25,7 @@ export default function ResidentShellLayout({
       <div className="hidden lg:flex">
         <ResidentSidebar />
       </div>
-      <main className="flex-1 px-5 py-6 pb-24 sm:px-[30px] sm:py-[26px] lg:pb-[26px]">
+      <main className="min-w-0 flex-1 px-5 py-6 pb-24 sm:px-[30px] sm:py-[26px] lg:pb-[26px]">
         {children}
       </main>
       <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-primary/10 bg-chrome lg:hidden">

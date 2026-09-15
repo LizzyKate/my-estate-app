@@ -42,7 +42,7 @@ export default function AdminGatePage() {
         />
       </div>
 
-      <TableShell>
+      <TableShell minWidth={680}>
         <TableHeaderRow columns={COLUMNS}>
           <span>Visitor</span>
           <span>Host · house</span>

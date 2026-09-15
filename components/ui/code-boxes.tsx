@@ -67,12 +67,12 @@ export function PinBoxes({
   length?: number;
 }) {
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-2.5 sm:gap-3">
       {Array.from({ length }).map((_, i) => (
         <div
           key={i}
           className={cn(
-            "flex size-[62px] items-center justify-center rounded-field border bg-surface font-mono text-2xl font-bold",
+            "flex size-[52px] items-center justify-center rounded-field border bg-surface font-mono text-2xl font-bold sm:size-[62px]",
             i < value.length
               ? "border-[1.5px] border-primary text-primary"
               : "border-primary/14 text-subtle"

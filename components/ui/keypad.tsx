@@ -33,7 +33,7 @@ export function NumericKeypad({
               else if (key === ENTER) onEnter?.();
               else onDigit(key);
             }}
-            className="flex h-[52px] w-[104px] items-center justify-center rounded-key border border-primary/14 bg-ghost font-mono text-[17px] font-medium text-text transition-colors hover:border-primary/28 active:bg-surface"
+            className="flex h-[52px] w-full items-center justify-center rounded-key border border-primary/14 bg-ghost font-mono text-[17px] font-medium text-text transition-colors hover:border-primary/28 active:bg-surface"
           >
             {key}
           </button>

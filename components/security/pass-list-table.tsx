@@ -22,7 +22,7 @@ export function PassListTable({
   const checkOutPass = useStore((s) => s.checkOutPass);
 
   return (
-    <TableShell>
+    <TableShell minWidth={680}>
       <TableHeaderRow columns={COLUMNS}>
         <span>Visitor</span>
         <span>Host · house</span>

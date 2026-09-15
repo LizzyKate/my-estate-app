@@ -61,7 +61,7 @@ export function PassIssuedModal({
             </p>
           </div>
 
-          <div className="mt-auto flex gap-2.5">
+          <div className="mt-auto flex flex-col gap-2.5 sm:flex-row">
             <Button
               variant="ghost"
               size="default"
@@ -86,7 +86,7 @@ export function PassIssuedModal({
             <Button
               variant="primary"
               size="default"
-              className="ml-auto"
+              className="sm:ml-auto"
               onClick={() => onOpenChange(false)}
             >
               Done

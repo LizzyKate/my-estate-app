@@ -37,7 +37,7 @@ export default function WalkupPage() {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]">
       <Card className="h-fit max-w-[520px] p-6">
         <h1 className="mb-1 text-[20px] font-bold text-text">
           Log a walk-up
